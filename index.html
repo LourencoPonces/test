@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .calculator {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .result {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .history {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .history h3 {
+            margin-top: 0;
+        }
+        
+        .history-item {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .clear-btn {
+            background: #e74c3c;
+            grid-column: span 2;
+        }
+        
+        .clear-btn:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>🧮 Simple Calculator</h1>
+        
+        <div class="input-group">
+            <label for="num1">First Number:</label>
+            <input type="number" id="num1" placeholder="Enter first number">
+        </div>
+        
+        <div class="input-group">
+            <label for="num2">Second Number:</label>
+            <input type="number" id="num2" placeholder="Enter second number">
+        </div>
+        
+        <div class="buttons">
+            <button onclick="calculate('add')">+</button>
+            <button onclick="calculate('subtract')">-</button>
+            <button onclick="calculate('multiply')">×</button>
+            <button onclick="calculate('divide')">÷</button>
+            <button class="clear-btn" onclick="clearCalculator()">Clear All</button>
+        </div>
+        
+        <div class="result" id="result">Result will appear here</div>
+        
+        <div class="history">
+            <h3>Calculation History</h3>
+            <div id="history"></div>
+        </div>
+    </div>
+
+    <script src="calculator.js"></script>
+    <script>
+        const calc = new Calculator();
+        
+        function calculate(operation) {
+            const num1 = parseFloat(document.getElementById('num1').value);
+            const num2 = parseFloat(document.getElementById('num2').value);
+            
+            if (isNaN(num1) || isNaN(num2)) {
+                document.getElementById('result').textContent = 'Please enter valid numbers';
+                return;
+            }
+            
+            let result;
+            try {
+                switch(operation) {
+                    case 'add':
+                        result = calc.add(num1, num2);
+                        break;
+                    case 'subtract':
+                        result = calc.subtract(num1, num2);
+                        break;
+                    case 'multiply':
+                        result = calc.multiply(num1, num2);
+                        break;
+                    case 'divide':
+                        result = calc.divide(num1, num2);
+                        break;
+                }
+                
+                document.getElementById('result').textContent = `Result: ${result}`;
+                updateHistory();
+                
+            } catch (error) {
+                document.getElementById('result').textContent = `Error: ${error.message}`;
+            }
+        }
+        
+        function updateHistory() {
+            const historyDiv = document.getElementById('history');
+            const history = calc.getHistory();
+            
+            historyDiv.innerHTML = history.map(entry => 
+                `<div class="history-item">${entry}</div>`
+            ).join('');
+        }
+        
+        function clearCalculator() {
+            calc.clearHistory();
+            document.getElementById('num1').value = '';
+            document.getElementById('num2').value = '';
+            document.getElementById('result').textContent = 'Result will appear here';
+            updateHistory();
+        }
+        
+        // Initialize history display
+        updateHistory();
+    </script>
+</body>
+</html>
