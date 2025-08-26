@@ -16,6 +16,8 @@ This repository contains basic project files and documentation.
 
 Feel free to contribute to this project by submitting issues or pull requests.
 
+Changes in the readme.
+
 ## License
 
 This project is open source and available under the [MIT License](LICENSE).
